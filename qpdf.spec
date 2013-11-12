@@ -1,7 +1,7 @@
 Summary:	Command-line tools and library for transforming PDF files
 Name:		qpdf
 Version:	5.0.1
-Release:	1
+Release:	2
 # MIT: e.g. libqpdf/sha2.c
 License:	Artistic 2.0 and MIT
 Group:		Applications/Publishing
@@ -84,11 +84,12 @@ rm -rf $RPM_BUILD_ROOT
 
 %files libs
 %defattr(644,root,root,755)
-%{_libdir}/libqpdf*.so.*
+%attr(755,root,root) %{_libdir}/libqpdf.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libqpdf.so.13
 
 %files devel
 %defattr(644,root,root,755)
-%{_includedir}/*
-%{_libdir}/libqpdf*.so
+%{_includedir}/qpdf
+%attr(755,root,root) %{_libdir}/libqpdf.so
 %{_pkgconfigdir}/libqpdf.pc
 %{_examplesdir}/%{name}-%{version}
