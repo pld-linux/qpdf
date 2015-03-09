@@ -1,17 +1,16 @@
-#
 # Conditional build:
 %bcond_without	static_libs	# static library build
 #
 Summary:	Command-line tools and library for transforming PDF files
 Summary(pl.UTF-8):	Narzędzia linii poleceń i biblioteka do przekształcania plików PDF
 Name:		qpdf
-Version:	5.0.1
-Release:	3
+Version:	5.1.2
+Release:	1
 # MIT: e.g. libqpdf/sha2.c
 License:	Artistic v2.0, some parts MIT
 Group:		Applications/Publishing
 Source0:	http://downloads.sourceforge.net/qpdf/%{name}-%{version}.tar.gz
-# Source0-md5:	6efd89c18461cb73f77bb60cb2da4bce
+# Source0-md5:	0bd15ef5eea5f628951ab456c84e78ec
 URL:		http://qpdf.sourceforge.net/
 BuildRequires:	libstdc++-devel
 BuildRequires:	make >= 3.81
