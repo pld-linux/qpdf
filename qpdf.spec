@@ -12,6 +12,7 @@ Group:		Applications/Publishing
 Source0:	http://downloads.sourceforge.net/qpdf/%{name}-%{version}.tar.gz
 # Source0-md5:	a11c1f99753934be7d60c0ab43821bbc
 URL:		http://qpdf.sourceforge.net/
+BuildRequires:	libjpeg-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	make >= 3.81
 BuildRequires:	pcre-devel
