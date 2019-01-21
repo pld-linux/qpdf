@@ -4,13 +4,13 @@
 Summary:	Command-line tools and library for transforming PDF files
 Summary(pl.UTF-8):	Narzędzia linii poleceń i biblioteka do przekształcania plików PDF
 Name:		qpdf
-Version:	8.2.1
+Version:	8.3.0
 Release:	1
 # MIT: e.g. libqpdf/sha2.c
 License:	Artistic v2.0, some parts MIT
 Group:		Applications/Publishing
 Source0:	http://downloads.sourceforge.net/qpdf/%{name}-%{version}.tar.gz
-# Source0-md5:	a11c1f99753934be7d60c0ab43821bbc
+# Source0-md5:	4df89ee9b32c48839b8e76f51115451c
 URL:		http://qpdf.sourceforge.net/
 BuildRequires:	libjpeg-devel
 BuildRequires:	libstdc++-devel
