@@ -5,18 +5,18 @@
 Summary:	Command-line tools and library for transforming PDF files
 Summary(pl.UTF-8):	Narzędzia linii poleceń i biblioteka do przekształcania plików PDF
 Name:		qpdf
-Version:	8.4.0
+Version:	9.1.1
 Release:	1
 # MIT: e.g. libqpdf/sha2.c
 License:	Artistic v2.0, some parts MIT
 Group:		Applications/Publishing
 Source0:	http://downloads.sourceforge.net/qpdf/%{name}-%{version}.tar.gz
-# Source0-md5:	60a66cf8cbdb3bb0d3bcf5b2f53ec06b
+# Source0-md5:	8a2ddc3bdf0671234a5651251a7e9da6
 URL:		http://qpdf.sourceforge.net/
+BuildRequires:	gnutls-devel
 BuildRequires:	libjpeg-devel
 BuildRequires:	libstdc++-devel
 BuildRequires:	make >= 3.81
-BuildRequires:	pcre-devel
 BuildRequires:	perl-Digest-MD5
 BuildRequires:	perl-base
 BuildRequires:	zlib-devel
@@ -58,8 +58,8 @@ Summary:	Development files for QPDF library
 Summary(pl.UTF-8):	Pliki programistyczne biblioteki QPDF
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
+Requires:	libjpeg-devel
 Requires:	libstdc++-devel
-Requires:	pcre-devel
 Requires:	zlib-devel
 
 %description devel
@@ -84,13 +84,12 @@ Statyczna biblioteka QPDF.
 %prep
 %setup -q
 
-%{__sed} -i -e '1s,^#!/usr/bin/env perl,#!/usr/bin/perl,' qpdf/fix-qdf
-
 %build
 %configure \
 	--docdir=%{_docdir}/%{name}-%{version} \
 	%{!?with_static_libs:--disable-static} \
-	--enable-show-failed-test-output
+	--enable-show-failed-test-output \
+	--with-default-crypto=gnutls
 
 # SHELL= is workaround for some build failures
 %{__make} \
@@ -128,7 +127,7 @@ rm -rf $RPM_BUILD_ROOT
 %files libs
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libqpdf.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libqpdf.so.21
+%attr(755,root,root) %ghost %{_libdir}/libqpdf.so.26
 
 %files devel
 %defattr(644,root,root,755)
