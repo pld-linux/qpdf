@@ -15,7 +15,7 @@ Source0:	https://downloads.sourceforge.net/qpdf/%{name}-%{version}.tar.gz
 URL:		https://qpdf.sourceforge.net/
 BuildRequires:	gnutls-devel
 BuildRequires:	libjpeg-devel
-BuildRequires:	libstdc++-devel
+BuildRequires:	libstdc++-devel >= 6:5
 BuildRequires:	make >= 3.81
 BuildRequires:	perl-Digest-MD5
 BuildRequires:	perl-base
@@ -59,7 +59,7 @@ Summary(pl.UTF-8):	Pliki programistyczne biblioteki QPDF
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	libjpeg-devel
-Requires:	libstdc++-devel
+Requires:	libstdc++-devel >= 6:5
 Requires:	zlib-devel
 
 %description devel
