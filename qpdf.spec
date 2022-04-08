@@ -1,5 +1,7 @@
 #
 # Conditional build:
+%bcond_without	gnutls		# gnutls crypto provider
+%bcond_with	openssl		# openssl crypto provider
 %bcond_without	static_libs	# static library build
 #
 Summary:	Command-line tools and library for transforming PDF files
@@ -13,12 +15,19 @@ Group:		Applications/Publishing
 Source0:	https://downloads.sourceforge.net/qpdf/%{name}-%{version}.tar.gz
 # Source0-md5:	440c70e3a5177087e5ac51b58371c043
 URL:		https://qpdf.sourceforge.net/
-BuildRequires:	gnutls-devel
+BuildRequires:	autoconf >= 2.68
+BuildRequires:	automake
+# sha256sum
+BuildRequires:	coreutils >= 6.3
+%{?with_gnutls:BuildRequires:	gnutls-devel}
 BuildRequires:	libjpeg-devel
 BuildRequires:	libstdc++-devel >= 6:5
+BuildRequires:	libtool >= 2:2
 BuildRequires:	make >= 3.81
+%{?with_openssl:BuildRequires:	openssl-devel >= 1.1.0}
 BuildRequires:	perl-Digest-MD5
 BuildRequires:	perl-base
+BuildRequires:	pkgconfig
 BuildRequires:	zlib-devel
 Requires:	%{name}-libs = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -85,11 +94,20 @@ Statyczna biblioteka QPDF.
 %setup -q
 
 %build
+# refresh for as-needed to work
+%{__libtoolize}
+%{__aclocal} -I m4
+%{__autoconf}
+%{__autoheader}
+sha256sum configure.ac aclocal.m4 libqpdf/qpdf/qpdf-config.h.in m4/* > autofiles.sums
 %configure \
 	--docdir=%{_docdir}/%{name}-%{version} \
+	--disable-implicit-crypto \
 	%{!?with_static_libs:--disable-static} \
-	--enable-show-failed-test-output \
-	--with-default-crypto=gnutls
+	--enable-crypto-native \
+	%{?with_gnutls:--enable-crypto-gnutls} \
+	%{?with_openssl:--enable-crypto-openssl} \
+	--enable-show-failed-test-output
 
 # SHELL= is workaround for some build failures
 %{__make} \
