@@ -7,16 +7,15 @@
 Summary:	Command-line tools and library for transforming PDF files
 Summary(pl.UTF-8):	Narzędzia linii poleceń i biblioteka do przekształcania plików PDF
 Name:		qpdf
-Version:	10.6.3
-Release:	1
+Version:	11.5.0
+Release:	0.1
 # MIT: e.g. libqpdf/sha2.c
 License:	Artistic v2.0, some parts MIT
 Group:		Applications/Publishing
 Source0:	https://downloads.sourceforge.net/qpdf/%{name}-%{version}.tar.gz
-# Source0-md5:	440c70e3a5177087e5ac51b58371c043
+# Source0-md5:	d916ac26b7f30a5cf3827c708c455ec9
 URL:		https://qpdf.sourceforge.net/
-BuildRequires:	autoconf >= 2.68
-BuildRequires:	automake
+BuildRequires:	cmake
 # sha256sum
 BuildRequires:	coreutils >= 6.3
 %{?with_gnutls:BuildRequires:	gnutls-devel}
@@ -94,20 +93,18 @@ Statyczna biblioteka QPDF.
 %setup -q
 
 %build
-# refresh for as-needed to work
-%{__libtoolize}
-%{__aclocal} -I m4
-%{__autoconf}
-%{__autoheader}
-sha256sum configure.ac aclocal.m4 libqpdf/qpdf/qpdf-config.h.in m4/* > autofiles.sums
-%configure \
-	--docdir=%{_docdir}/%{name}-%{version} \
-	--disable-implicit-crypto \
-	%{!?with_static_libs:--disable-static} \
-	--enable-crypto-native \
-	%{?with_gnutls:--enable-crypto-gnutls} \
-	%{?with_openssl:--enable-crypto-openssl} \
-	--enable-show-failed-test-output
+mkdir build
+cd build
+%cmake \
+	-DUSE_IMPLICIT_CRYPTO=OFF \
+	-DREQUIRE_CRYPTO_NATIVE=ON \
+	%{!?with_static_libs:-DBUILD_STATIC_LIBS=OFF} \
+	%{?with_gnutls:-DREQUIRE_CRYPTO_GNUTLS=ON} \
+	%{?with_openssl:-DREQUIRE_CRYPTO_OPENSSL=ON} \
+	-DSHOW_FAILED_TEST_OUTPUT=ON \
+	-DCMAKE_INSTALL_DOCDIR=%{_docdir}/%{name}-%{version} \
+	-DCMAKE_BUILD_TYPE=RelWithDebInfo \
+	..
 
 # SHELL= is workaround for some build failures
 %{__make} \
@@ -117,13 +114,13 @@ sha256sum configure.ac aclocal.m4 libqpdf/qpdf/qpdf-config.h.in m4/* > autofiles
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
+cd build
 %{__make} install \
 	SHELL=/bin/sh \
 	DESTDIR=$RPM_BUILD_ROOT
-
+cd ..
 cp -a examples/*.c* $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/libqpdf.la
 %{__rm} -r $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
 
 %clean
@@ -134,7 +131,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc ChangeLog README.md TODO
+%doc ChangeLog README.md TODO.md
 %attr(755,root,root) %{_bindir}/fix-qdf
 %attr(755,root,root) %{_bindir}/qpdf
 %attr(755,root,root) %{_bindir}/zlib-flate
@@ -145,7 +142,7 @@ rm -rf $RPM_BUILD_ROOT
 %files libs
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libqpdf.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libqpdf.so.28
+%attr(755,root,root) %ghost %{_libdir}/libqpdf.so.29
 
 %files devel
 %defattr(644,root,root,755)
@@ -153,6 +150,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/qpdf
 %{_pkgconfigdir}/libqpdf.pc
 %{_examplesdir}/%{name}-%{version}
+%{_libdir}/cmake/qpdf/libqpdfTargets-relwithdebinfo.cmake
+%{_libdir}/cmake/qpdf/libqpdfTargets.cmake
+%{_libdir}/cmake/qpdf/qpdfConfig.cmake
+%{_libdir}/cmake/qpdf/qpdfConfigVersion.cmake
 
 %if %{with static_libs}
 %files static
