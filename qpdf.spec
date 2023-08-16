@@ -15,18 +15,18 @@ Group:		Applications/Publishing
 Source0:	https://downloads.sourceforge.net/qpdf/%{name}-%{version}.tar.gz
 # Source0-md5:	d916ac26b7f30a5cf3827c708c455ec9
 URL:		https://qpdf.sourceforge.net/
-BuildRequires:	cmake
+BuildRequires:	cmake >= 3.16
 # sha256sum
 BuildRequires:	coreutils >= 6.3
 %{?with_gnutls:BuildRequires:	gnutls-devel}
 BuildRequires:	libjpeg-devel
-BuildRequires:	libstdc++-devel >= 6:5
-BuildRequires:	libtool >= 2:2
+BuildRequires:	libstdc++-devel >= 6:7
 BuildRequires:	make >= 3.81
 %{?with_openssl:BuildRequires:	openssl-devel >= 1.1.0}
 BuildRequires:	perl-Digest-MD5
 BuildRequires:	perl-base
 BuildRequires:	pkgconfig
+BuildRequires:	rpmbuild(macros) >= 1.605
 BuildRequires:	zlib-devel
 Requires:	%{name}-libs = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -67,7 +67,7 @@ Summary(pl.UTF-8):	Pliki programistyczne biblioteki QPDF
 Group:		Development/Libraries
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	libjpeg-devel
-Requires:	libstdc++-devel >= 6:5
+Requires:	libstdc++-devel >= 6:7
 Requires:	zlib-devel
 
 %description devel
@@ -93,32 +93,24 @@ Statyczna biblioteka QPDF.
 %setup -q
 
 %build
-mkdir build
-cd build
-%cmake \
-	-DUSE_IMPLICIT_CRYPTO=OFF \
-	-DREQUIRE_CRYPTO_NATIVE=ON \
+%cmake -B build \
 	%{!?with_static_libs:-DBUILD_STATIC_LIBS=OFF} \
+	-DCMAKE_INSTALL_DOCDIR=%{_docdir}/%{name}-%{version} \
 	%{?with_gnutls:-DREQUIRE_CRYPTO_GNUTLS=ON} \
+	-DREQUIRE_CRYPTO_NATIVE=ON \
 	%{?with_openssl:-DREQUIRE_CRYPTO_OPENSSL=ON} \
 	-DSHOW_FAILED_TEST_OUTPUT=ON \
-	-DCMAKE_INSTALL_DOCDIR=%{_docdir}/%{name}-%{version} \
-	-DCMAKE_BUILD_TYPE=RelWithDebInfo \
-	..
+	-DUSE_IMPLICIT_CRYPTO=OFF
 
-# SHELL= is workaround for some build failures
-%{__make} \
-	SHELL=/bin/sh
+%{__make} -C build
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
-cd build
-%{__make} install \
-	SHELL=/bin/sh \
+%{__make} -C build install \
 	DESTDIR=$RPM_BUILD_ROOT
-cd ..
+
 cp -a examples/*.c* $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
 
 %{__rm} -r $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
@@ -150,11 +142,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_includedir}/qpdf
 %{_pkgconfigdir}/libqpdf.pc
 %{_examplesdir}/%{name}-%{version}
-%dir %{_libdir}/cmake/qpdf
-%{_libdir}/cmake/qpdf/libqpdfTargets-relwithdebinfo.cmake
-%{_libdir}/cmake/qpdf/libqpdfTargets.cmake
-%{_libdir}/cmake/qpdf/qpdfConfig.cmake
-%{_libdir}/cmake/qpdf/qpdfConfigVersion.cmake
+%{_libdir}/cmake/qpdf
 
 %if %{with static_libs}
 %files static
