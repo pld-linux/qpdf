@@ -19,6 +19,9 @@ BuildRequires:	cmake >= 3.16
 # sha256sum
 BuildRequires:	coreutils >= 6.3
 %{?with_gnutls:BuildRequires:	gnutls-devel}
+%ifnarch %arch_with_atomics64
+BuildRequires:	libatomic-devel
+%endif
 BuildRequires:	libjpeg-devel
 BuildRequires:	libstdc++-devel >= 6:7
 BuildRequires:	make >= 3.81
@@ -26,7 +29,7 @@ BuildRequires:	make >= 3.81
 BuildRequires:	perl-Digest-MD5
 BuildRequires:	perl-base
 BuildRequires:	pkgconfig
-BuildRequires:	rpmbuild(macros) >= 1.605
+BuildRequires:	rpmbuild(macros) >= 2.025
 BuildRequires:	zlib-devel
 Requires:	%{name}-libs = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
