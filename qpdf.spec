@@ -24,7 +24,7 @@ BuildRequires:	libatomic-devel
 %endif
 BuildRequires:	libjpeg-devel
 BuildRequires:	libstdc++-devel >= 6:7
-BuildRequires:	make >= 3.81
+BuildRequires:	make >= 1:3.81
 %{?with_openssl:BuildRequires:	openssl-devel >= 1.1.0}
 BuildRequires:	perl-Digest-MD5
 BuildRequires:	perl-base
