@@ -2,6 +2,7 @@
 # Conditional build:
 %bcond_without	gnutls		# gnutls crypto provider
 %bcond_with	openssl		# openssl crypto provider
+%bcond_without	zopfli		# zopfli based compression support
 %bcond_without	static_libs	# static library build
 #
 Summary:	Command-line tools and library for transforming PDF files
@@ -29,8 +30,9 @@ BuildRequires:	make >= 1:3.81
 BuildRequires:	perl-Digest-MD5
 BuildRequires:	perl-base
 BuildRequires:	pkgconfig
-BuildRequires:	rpmbuild(macros) >= 2.025
+BuildRequires:	rpmbuild(macros) >= 2.047
 BuildRequires:	zlib-devel
+%{?with_zopfli:BuildRequires:	zopfli-devel}
 Requires:	%{name}-libs = %{version}-%{release}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -103,7 +105,8 @@ Statyczna biblioteka QPDF.
 	-DREQUIRE_CRYPTO_NATIVE=ON \
 	%{?with_openssl:-DREQUIRE_CRYPTO_OPENSSL=ON} \
 	-DSHOW_FAILED_TEST_OUTPUT=ON \
-	-DUSE_IMPLICIT_CRYPTO=OFF
+	-DUSE_IMPLICIT_CRYPTO=OFF \
+	-DZOPFLI=%{__ON_OFF zopfli}
 
 %{__make} -C build
 
