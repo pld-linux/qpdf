@@ -112,12 +112,14 @@ Statyczna biblioteka QPDF.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
+install -d $RPM_BUILD_ROOT{%{_examplesdir}/%{name}-%{version},%{bash_compdir},%{zsh_compdir}}
 
 %{__make} -C build install \
 	DESTDIR=$RPM_BUILD_ROOT
 
 cp -a examples/*.c* $RPM_BUILD_ROOT%{_examplesdir}/%{name}-%{version}
+cp -a completions/bash/qpdf $RPM_BUILD_ROOT%{bash_compdir}
+cp -a completions/zsh/_qpdf $RPM_BUILD_ROOT%{zsh_compdir}
 
 %{__rm} -r $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
 
@@ -136,6 +138,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/fix-qdf.1*
 %{_mandir}/man1/qpdf.1*
 %{_mandir}/man1/zlib-flate.1*
+%{bash_compdir}/qpdf
+%{zsh_compdir}/_qpdf
 
 %files libs
 %defattr(644,root,root,755)
