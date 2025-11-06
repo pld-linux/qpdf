@@ -8,13 +8,13 @@
 Summary:	Command-line tools and library for transforming PDF files
 Summary(pl.UTF-8):	Narzędzia linii poleceń i biblioteka do przekształcania plików PDF
 Name:		qpdf
-Version:	11.10.1
+Version:	12.2.0
 Release:	1
 # MIT: e.g. libqpdf/sha2.c
 License:	Artistic v2.0, some parts MIT
 Group:		Applications/Publishing
 Source0:	https://downloads.sourceforge.net/qpdf/%{name}-%{version}.tar.gz
-# Source0-md5:	1ff2340ee610bd8d1e1296d3523c79c9
+# Source0-md5:	f10f5b3a0635e9fd2f305880c5cd8534
 URL:		https://qpdf.sourceforge.net/
 BuildRequires:	cmake >= 3.16
 # sha256sum
@@ -144,7 +144,7 @@ rm -rf $RPM_BUILD_ROOT
 %files libs
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libqpdf.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libqpdf.so.29
+%attr(755,root,root) %ghost %{_libdir}/libqpdf.so.30
 
 %files devel
 %defattr(644,root,root,755)
